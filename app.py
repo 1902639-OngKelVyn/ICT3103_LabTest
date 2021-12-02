@@ -7,4 +7,4 @@ def hello_world():
     return render_template('index.html')
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='3.143.222.247')
