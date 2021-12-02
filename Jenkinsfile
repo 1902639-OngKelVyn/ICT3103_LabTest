@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Build') { 
             steps {
-                sh 'uwsgi --http: 3000 --wsgi-file wsgi.py' 
+                sh 'uwsgi --http: 3000 --wsgi-file app.py' 
             }
         }
     }
