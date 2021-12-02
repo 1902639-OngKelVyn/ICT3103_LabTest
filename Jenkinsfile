@@ -1,43 +1,14 @@
 pipeline {
-  agent any
-  stages {
-    stage('Build') {
-      parallel {
-        stage('Build') {
-          steps {
-            sh 'echo "building the repo"'
-          }
+    agent {
+        docker {
+            args '-p 3000:3000' 
         }
-      }
     }
-  
-    stage('Test') {
-      steps {
-        sh 'python3 app.py'
-        input(id: "Deploy Gate", message: "Deploy ${params.project_name}?", ok: 'Deploy')
-      }
+    stages {
+        stage('Build') { 
+            steps {
+                sh 'python3 app.py' 
+            }
+        }
     }
-  
-    stage('Deploy')
-    {
-      steps {
-        echo "deploying the application"
-        sh "sudo nohup python3 app.py > log.txt 2>&1 &"
-      }
-    }
-  }
-  
-  post {
-        always {
-            echo 'The pipeline completed'
-            junit allowEmptyResults: true, testResults:'**/test_reports/*.xml'
-        }
-        success {                   
-            echo "Flask Application Up and running!!"
-        }
-        failure {
-            echo 'Build stage failed'
-            error('Stopping early…')
-        }
-      }
 }
